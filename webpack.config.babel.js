@@ -106,6 +106,12 @@ const prodPlugin = new webpack.DefinePlugin({
   }
 })
 
+const devPlugin = new webpack.DefinePlugin({
+  'process.env' : {
+    NODE_ENV : JSON.stringify('development')
+  }
+})
+
 const envInfo = new webpack.DefinePlugin({
   isProduction,
   testAPI       : JSON.stringify(api),
@@ -143,7 +149,7 @@ process.env.BABEL_ENV = LAUNCH_COMMAND
 process.env.LINT_ENV = LAUNCH_COMMAND
 process.env.isProduction = isProduction
 
-const devPlugins = [HMRPlugin]
+const devPlugins = [HMRPlugin, devPlugin]
 const commonPlugins = [
   bundleAnalyzerPlugin,
   caseSensitivePathPlugin,
@@ -161,6 +167,7 @@ if (LAUNCH_COMMAND === 'prod' || LAUNCH_COMMAND === 'start') {
 
 const prodEntry = [PATHS.app, `${PATHS.styles}/main.css`]
 const devEntry = [...prodEntry, require.resolve('webpack-dev-server/client') + '?/']
+
 
 const baseConfigs = {
   mode : isProduction ? 'production' : 'development',

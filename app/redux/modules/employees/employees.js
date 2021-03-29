@@ -31,14 +31,12 @@ export function fetchEmployee(name) {
     try {
       const employeeGraph = await makeEmployeeGraph(name, store.getState().employees.employeeGraph)
 
-
       if (employeeGraph.error === undefined) {
         dispatch(getEmployeeSuccess())
         dispatch(updateEmployeesGraph(employeeGraph))
       } else {
         dispatch(getEmployeeFailure(employeeGraph.error))
       }
-
     } catch (error) {
       dispatch(getEmployeeFailure(error.message || error))
     }

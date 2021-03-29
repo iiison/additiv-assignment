@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Input } from '$COMPONENTS'
-import { useHistory, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import * as styles from './styles.css'
 

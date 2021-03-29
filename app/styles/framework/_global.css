@@ -103,6 +103,10 @@
     transition: opacity 500ms ease-in;
   }
 
+  .link{
+    color: $theme-3;
+  }
+
   @media print{
 
     .hidden-print{

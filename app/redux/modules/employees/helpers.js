@@ -27,8 +27,7 @@ class EmployeeGraph extends Digraph {
         ...prev,
         [curr] : false
       }), {})
-    let queue = node.nodes
-
+    let queue = [...node.nodes]
 
     while (queue.length > 0) {
       const currNode = this.nodes[queue.shift()]
@@ -46,20 +45,31 @@ class EmployeeGraph extends Digraph {
   }
 }
 
-export async function getEmployeesData(employeeName) {
+export async function getEmployeesData(employeeName, { nodes }) {
   const employeeMap = {}
+  const hasDataOf = Object.keys(nodes)
 
   async function fetchData(names) {
     const promises = []
 
     for (const name of names) {
-      promises.push(get({ path : `assignment/employees/${name}` }))
+      if (!hasDataOf.includes(name)) {
+        promises.push(get({ path : `assignment/employees/${name}` }))
+      } else {
+        promises.push(null)
+      }
     }
 
     const responses = await Promise.allSettled(promises)
 
     for (let i = 0; i < promises.length; i++) {
-      const { value : { response, httpStatus } } = responses[i]
+      const { value } = responses[i]
+
+      if (value === null) {
+        continue
+      }
+
+      const { response, httpStatus } = value
 
       if (httpStatus !== 200) {
         continue
@@ -68,6 +78,7 @@ export async function getEmployeesData(employeeName) {
       const name = names[i]
 
       employeeMap[name] = response
+      hasDataOf.push(name)
 
       const [, directSubordinates = {}] = response
       const { "direct-subordinates" : subordinates } = directSubordinates
@@ -84,19 +95,20 @@ export async function getEmployeesData(employeeName) {
 }
 
 export async function makeEmployeeGraph(employeeName, previousGraph) {
-  const employeesData = await getEmployeesData(employeeName)
   const employeesGraph = previousGraph || new EmployeeGraph()
+  const employeesData = await getEmployeesData(employeeName, employeesGraph)
 
   function addEmployeeToGraph(names, supervisor) {
     for (const name of names) {
-      const [ designation, directSubordinates = {} ] = employeesData[name]
-      const { "direct-subordinates" : subordinates } = directSubordinates
-      const { nodes } = employeesGraph
-      const allEmployeesNames = Object.keys(nodes)
-      const doesNodeAlreadyExist = allEmployeesNames.includes(name)
-      let employee
+      let employee, subordinates
 
-      if (!doesNodeAlreadyExist) {
+      if (employeesData[name] === undefined) {
+        employee = employeesGraph.nodes[name]
+      } else {
+        const [ designation, directSubordinates = {} ] = employeesData[name]
+        const { "direct-subordinates" : empSubordinates } = directSubordinates
+
+        subordinates = empSubordinates
         employee = new Employee({
           name,
           designation
@@ -104,13 +116,13 @@ export async function makeEmployeeGraph(employeeName, previousGraph) {
 
         employeesGraph.addNode(employee)
       }
-
       
       if (supervisor !== undefined) {
         employeesGraph.addEdge(supervisor, name)
       }
 
-      if (!doesNodeAlreadyExist && subordinates && subordinates.length) {
+      // if (!doesNodeAlreadyExist && subordinates && subordinates.length) {
+      if (subordinates && subordinates.length) {
         addEmployeeToGraph(subordinates, name)
       }
     }
@@ -118,6 +130,7 @@ export async function makeEmployeeGraph(employeeName, previousGraph) {
 
   if (Object.keys(employeesData).length > 0) {
     addEmployeeToGraph([employeeName])
+
     return employeesGraph
   }
 
@@ -125,3 +138,4 @@ export async function makeEmployeeGraph(employeeName, previousGraph) {
     error : 'Employee Not Found'
   }
 }
+

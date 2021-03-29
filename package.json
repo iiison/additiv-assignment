@@ -5,19 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch --coverage",
-    "start": "webpack-dev-server --config webpack.config.babel.js --color --progress --hot --inline --mode development",
+    "start": "webpack-dev-server --config webpack.config.babel.js --color --progress --hot --inline --mode=development",
     "analyze": "webpack-dev-server --config webpack.config.babel.js --color --progress --hot --inline --mode development",
-    "prod": "webpack --mode production -p"
+    "prod": "webpack --mode=production -p"
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
+    "history": "^5.0.0",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-redux": "^7.2.1",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.2.3",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.1",
-    "redux-react-hook": "^3.4.0",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
@@ -76,7 +77,7 @@
     "postcss-simple-vars": "^5.0.2",
     "precss": "^4.0.0",
     "react-hot-loader": "^4.8.4",
-    "react-test-renderer": "^16.8.6",
+    "react-test-renderer": "^16.9.0",
     "redux-mock-store": "^1.5.4",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.2.3",

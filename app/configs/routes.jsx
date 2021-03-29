@@ -23,4 +23,5 @@ const routes = () => {
 }
 
 export default routes
+//             <Route path='/employees/:name' component={EmployeeDetails} />
 
