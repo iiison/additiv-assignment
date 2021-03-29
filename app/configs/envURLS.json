@@ -1,0 +1,5 @@
+{
+  "alpha": "http://api.additivasia.io/api/v1/",
+  "prod": "http://api.additivasia.io/api/v1/",
+  "test": "http://api.additivasia.io/api/v1/"
+}

@@ -1,0 +1,21 @@
+@import "../../styles/base/_variables";
+
+.employeeInput{
+  margin: 0;
+  padding: 10px;
+  font-size: 14px;
+  min-width: 200px;
+  border-radius: 5px 0 0 5px;
+}
+
+.searchButton{
+  background-color: $theme-2;
+  border-radius: 0 5px 5px 0;
+  color: $theme-3;
+  padding: 0 10px;
+
+  &:hover {
+    background-color: $theme-3;
+    color: $theme-2;
+  }
+}
