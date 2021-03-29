@@ -1,3 +1,19 @@
-# Manufacturing Project MVP v1
+# Additiv Assignment
 
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+---
+
+## Install dependencies
+
+```sh
+npm install
+```
+
+## Run Project
+
+```sh
+npm run start
+```
+
+## Env Dependencies:
+
+Node: 12.16.3
