@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchEmployee } from '$RMODULES/employees/employees'
 import { toTitleCase } from '$UTILS'
+
+import { getEmployees } from './employeesHelpers'
 
 const renderEmployeeList = (names) => {
   if (names.length === 0) {
@@ -17,14 +17,19 @@ const renderEmployeeList = (names) => {
 }
 
 const EmployeeDetails = () => {
-  const dispatch = useDispatch()
+  const [subordinates, setSubordinates] = useState(null)
+  const [error, setError] = useState(null)
+
   const { name : inputName } = useParams()
   const name = toTitleCase(inputName)
-  const { error, employeeGraph } = useSelector(({ employees } = {}) => employees)
 
-  useEffect(() => {
-    if (employeeGraph === null || !employeeGraph.nodes[name]) {
-      dispatch(fetchEmployee(name))
+  useEffect(async () => {
+    const { allSubordinates, error } = await getEmployees(inputName)
+
+    if (error !== undefined) {
+      setError(error.message)
+    } else {
+      setSubordinates(allSubordinates)
     }
   }, [])
 
@@ -34,7 +39,7 @@ const EmployeeDetails = () => {
       <div className='grid-center grid-middle full-height col-12'>
         <div className='col'>
           <h1 className='grid-center'>{name}</h1>
-          {employeeGraph && renderEmployeeList(employeeGraph.findAllEmployeesFrom(name))}
+          {subordinates && renderEmployeeList(subordinates)}
           {error && <p className='grid-center padded-tb-l'>({error})</p>}
         </div>
       </div>
